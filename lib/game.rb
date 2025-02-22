@@ -6,6 +6,7 @@ class Game
   def initialize
     @colors = Color.new
     @computer_secret_code = @colors.generate_color_code
+    @hint = []
   end
 
   def start_game
@@ -18,21 +19,28 @@ class Game
   end
 
   def guess_code
-    guess = gets.chomp
+    gets.chomp
   end
 
   # will refactor later
   def guess_correct?(guesses)
-    hint = []
-    computer_code.each.with_index do |code, i|
-      guesses.each.with_index do |guess, j|
-        if code == guess && i == j
-          hint.push(:black)
-        elsif code == guess && i != j
-          hint.push(:white)
-        end
+    arr = []
+    @computer_secret_code.each.with_index do |code, i|
+      if code == guesses[i] && i == guesses.index(guesses[i])
+        arr.push(:black)
+      elsif code == guesses[i] && i != guesses.index(guesses[i])
+        arr.push(:white)
       end
     end
-    hint
+    @hint.push(arr)
+    arr
   end
 end
+
+# guesses.each.with_index do |guess, j|
+#   if code == guess && i == j
+#     @hint.push(:black)
+#   elsif code == guess && i != j
+#     @hint.push(:white)
+#   end
+# end
