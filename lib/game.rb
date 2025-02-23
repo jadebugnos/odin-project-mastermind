@@ -3,7 +3,8 @@ require_relative "color"
 class Game
   attr_reader :colors, :computer_code
 
-  def initialize
+  def initialize(player)
+    @player = player
     @colors = Color.new
     @computer_secret_code = @colors.generate_color_code
     @hint = []
@@ -11,10 +12,16 @@ class Game
 
   def start_game
     puts "Welcome to Mastermind\nEnter your name:"
+    username = gets.chomp
+    puts "Do you want to be the code breaker or the code maker?\nType your choice:"
+    role = gets.chomp
+    @player.set_info(username, role)
+    run_game
   end
 
   def run_game
     10.times do
+      
     end
   end
 
