@@ -11,17 +11,12 @@ class Game
   end
 
   def start_game
-    puts "Welcome to Mastermind\nEnter your name:"
-    username = gets.chomp
-    puts "Do you want to be the code breaker or the code maker?\nType your choice:"
-    role = gets.chomp
-    @player.set_info(username, role)
-    run_game
+    @player.handle_input
+    # run_game
   end
 
   def run_game
     10.times do
-      
     end
   end
 
@@ -43,11 +38,3 @@ class Game
     arr
   end
 end
-
-# guesses.each.with_index do |guess, j|
-#   if code == guess && i == j
-#     @hint.push(:black)
-#   elsif code == guess && i != j
-#     @hint.push(:white)
-#   end
-# end
