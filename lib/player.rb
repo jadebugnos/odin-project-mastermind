@@ -9,8 +9,9 @@ class Player
 
   def handle_input
     @username = validate_username
+    puts "Hello #{@username}!"
     @roles = validate_role
-    puts @roles
+    puts "You are the #{@roles}"
   end
 
   def validate_username
@@ -26,7 +27,7 @@ class Player
   def validate_role
     role = nil
     loop do
-      puts "choose your role:\nEnter 1 for Code Breaker\nEnter 2 for Code Maker"
+      puts "Please choose your role:\nEnter 1 for Code Breaker\nEnter 2 for Code Maker"
       role = gets.chomp.to_i
 
       raise "Unexpected error: role was not set!" unless [1, 2].include?(role)
