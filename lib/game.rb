@@ -1,4 +1,5 @@
 require_relative "color"
+require "colorize"
 # this file handles the Game class definition
 class Game
   attr_reader :colors, :computer_code
@@ -18,14 +19,14 @@ class Game
   # add logic to run game, this is what you should do next
   def run_game
     game_instructions
-    counter = 0
+    counter = 10
     10.times do
-      puts "#{counter} try"
+      puts "#{counter} tries left"
       @colors.display_colors
       guess = guess_code
       guess_correct?(guess)
       puts @hint
-      counter += 1
+      counter -= 1
     end
   end
 
@@ -40,7 +41,7 @@ class Game
       White: Correct color, wrong placement
       Blank: No correct colors or placements.
 
-      choose 4 colors and type the number of your guess:
+      choose 4 colors and type their corresponding numbers:
     TEXT
   end
 
@@ -50,7 +51,7 @@ class Game
     until guesses.size == 4
       guess = gets.chomp.to_i
       if (1..10).include?(guess)
-        guesses.push(@colors.colors[guess])
+        guesses.push(@colors.colors[guess].to_s.colorize(@colors.colors[guess]))
         puts guesses.join(" ")
       else
         puts "Invalid input! please select a valid number 1..10"
