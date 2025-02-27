@@ -50,8 +50,9 @@ class Game
       guess = gets.chomp.to_i
       color = @colors.colors[guess]
       if (1..10).include?(guess)
-        guesses.push(color.to_s.colorize(color))
-        puts guesses.join(" ")
+        guesses.push(color)
+        # Convert each symbol to a string, colorize it, and join with spaces
+        puts(guesses.map { |item| item.to_s.colorize(item) }.join(" "))
       else
         puts "Invalid input! please select a valid number 1..10"
       end
@@ -61,6 +62,7 @@ class Game
 
   # will refactor later
   def guess_correct?(guesses)
+    p guesses
     arr = []
     @computer_secret_code.each.with_index do |code, i|
       if code == guesses[i] && i == guesses.index(guesses[i])
