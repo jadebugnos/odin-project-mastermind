@@ -9,13 +9,13 @@ class Player
 
   def handle_input
     @username = validate_username
-    puts "Hello #{@username}!"
+    slow_print "Hello #{@username}!"
     @roles = validate_role
-    puts "You are the #{@roles}"
+    slow_print "You are the #{@roles}"
   end
 
   def validate_username
-    puts "Welcome to Mastermind\nEnter your username:"
+    slow_print "Welcome to Mastermind\nEnter your username:\n"
     loop do
       username = gets.chomp
       return username unless username.nil? || username.strip.empty?
@@ -27,7 +27,7 @@ class Player
   def validate_role
     role = nil
     loop do
-      puts "Please choose your role:\nEnter 1 for Code Breaker\nEnter 2 for Code Maker"
+      slow_print "Please choose your role:\nEnter 1 for Code Breaker\nEnter 2 for Code Maker\n"
       role = gets.chomp.to_i
 
       raise "Unexpected error: role was not set!" unless [1, 2].include?(role)
@@ -37,5 +37,13 @@ class Player
       puts e.message
     end
     role == 1 ? "Code Breaker" : "Code Maker"
+  end
+
+  def slow_print(text)
+    text.each_char do |char|
+      print char
+      sleep(0.05)
+    end
+    puts
   end
 end

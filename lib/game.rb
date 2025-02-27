@@ -1,12 +1,11 @@
 require_relative "color"
-require "colorize"
 # this file handles the Game class definition
 class Game
   attr_reader :colors, :computer_code
 
-  def initialize(player)
+  def initialize(player, colors)
     @player = player
-    @colors = Color.new
+    @colors = colors
     @computer_secret_code = @colors.generate_color_code
     @hint = []
   end
@@ -18,7 +17,7 @@ class Game
 
   # add logic to run game, this is what you should do next
   def run_game
-    game_instructions
+    @player.slow_print game_instructions
     counter = 10
     10.times do
       puts "#{counter} tries left"
@@ -32,8 +31,7 @@ class Game
 
   # display game instructions
   def game_instructions
-    puts "\n" * 5 # Adds 5 new lines for spacing
-    puts <<~TEXT
+    <<~TEXT
       The computer has created the code. Try and break it.
       You have 10 tries. Each guess will return a hint:
 
@@ -50,8 +48,9 @@ class Game
 
     until guesses.size == 4
       guess = gets.chomp.to_i
+      color = @colors.colors[guess]
       if (1..10).include?(guess)
-        guesses.push(@colors.colors[guess].to_s.colorize(@colors.colors[guess]))
+        guesses.push(color.to_s.colorize(color))
         puts guesses.join(" ")
       else
         puts "Invalid input! please select a valid number 1..10"
