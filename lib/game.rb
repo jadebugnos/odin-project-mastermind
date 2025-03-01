@@ -15,7 +15,7 @@ class Game
     run_game
   end
 
-  # add logic to run game, this is what you should do next
+  # this method keeps looping the game for 10 rounds
   def run_game
     @player.slow_print game_instructions
     counter = 10
@@ -23,13 +23,12 @@ class Game
       puts "#{counter} tries left"
       @colors.display_colors
       guess = guess_code
-      guess_correct?(guess)
-      puts @hint
+      guess_correct?(guess, @computer_secret_code)
       counter -= 1
     end
   end
 
-  # display game instructions
+  # stores the game instruction texts
   def game_instructions
     <<~TEXT
       The computer has created the code. Try and break it.
@@ -43,9 +42,9 @@ class Game
     TEXT
   end
 
+  # handles the players guess code input
   def guess_code
     guesses = []
-
     until guesses.size == 4
       guess = gets.chomp.to_i
       color = @colors.colors[guess]
@@ -60,18 +59,23 @@ class Game
     guesses
   end
 
-  # will refactor later
-  def guess_correct?(guesses)
-    p guesses
-    arr = []
-    @computer_secret_code.each.with_index do |code, i|
-      if code == guesses[i] && i == guesses.index(guesses[i])
-        arr.push(:black)
-      elsif code == guesses[i] && i != guesses.index(guesses[i])
-        arr.push(:white)
+  # compares secret code to the guess code then outputs the hints
+  def guess_correct?(guesses, computer_code)
+    arr = Array.new(4, "____")
+    p computer_code
+    computer_code.each.with_index do |code, i|
+      guesses.each.with_index do |guess, j|
+        unless %i[black white].include?(arr[j]) # makes sure doesn't overwrite previous assignment
+          if code == guess && i == j
+            arr[j] = :black
+          elsif code == guess && j != i
+            arr[j] = :white
+          end
+        end
       end
     end
     @hint.push(arr)
-    arr
+    puts(arr.map { |item| item.to_s.colorize(item) }.join(" ")) # adds color to the item before printing
+    arr = []
   end
 end

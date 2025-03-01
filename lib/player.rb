@@ -7,6 +7,7 @@ class Player
     @roles = role
   end
 
+  # handles the player inputs
   def handle_input
     @username = validate_username
     slow_print "Hello #{@username}!"
@@ -14,6 +15,7 @@ class Player
     slow_print "You are the #{@roles}"
   end
 
+  # handles player input validation for username
   def validate_username
     slow_print "Welcome to Mastermind\nEnter your username:\n"
     loop do
@@ -24,6 +26,7 @@ class Player
     end
   end
 
+  # handle player input validation for the role
   def validate_role
     role = nil
     loop do
@@ -39,6 +42,7 @@ class Player
     role == 1 ? "Code Breaker" : "Code Maker"
   end
 
+  # add a slow printing animation to texts for better visual
   def slow_print(text)
     text.each_char do |char|
       print char

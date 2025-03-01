@@ -3,13 +3,17 @@ class Color
   attr_reader :colors
 
   def initialize
+    # the placeholder is so we won't go out of bounce since index starts at zero
     @colors = %i[placeholder red blue green yellow light_red magenta light_blue light_green light_yellow cyan]
   end
 
   def generate_color_code
-    colors.sample(4)
+    # makes sure it doesn't include the placeholder before taking 4 items for the secret code
+    filtered_colors = @colors.reject { |item| item == :placeholder }
+    filtered_colors.sample(4)
   end
 
+  # handles color printing logic
   def display_colors
     @colors.each_with_index do |item, index|
       if index == @colors.length - 1
