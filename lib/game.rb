@@ -19,11 +19,16 @@ class Game
   def run_game
     @player.slow_print game_instructions
     counter = 10
-    10.times do
+    while counter
       puts "#{counter} tries left"
       @colors.display_colors
       guess = guess_code
       guess_correct?(guess, @computer_secret_code)
+      if @hints_history.last.all? { |item| item == :black }
+        puts "The Secret Code has been decoded! Congratulations"
+        color_and_print(computer_secret_code)
+        break
+      end
       counter -= 1
     end
   end
@@ -51,7 +56,7 @@ class Game
       if (1..10).include?(guess)
         guesses.push(color)
         # Convert each symbol to a string, colorize it, and join with spaces
-        puts(guesses.map { |item| item.to_s.colorize(item) }.join(" "))
+        color_and_print(guesses)
       else
         puts "Invalid input! please select a valid number 1..10"
       end
@@ -62,8 +67,7 @@ class Game
   # compares secret code to the guess code then outputs the hints
   def guess_correct?(guesses, secret_code)
     hints_board = Array.new(4, "____")
-    code_counts = secret_code.tally # counts the occurrences of the codes
-    p secret_code
+    code_counts = secret_code.tally # this is a hash containing the number of occurrences of each code
     secret_code.each.with_index do |code, i|
       if code == guesses[i]
         hints_board[i] = :black
@@ -84,7 +88,11 @@ class Game
       end
     end
     @hints_history.push(hints_board)
-    puts(hints_board.map { |item| item.to_s.colorize(item) }.join(" ")) # adds color to the item before printing
-    hints_board.clear # resets the array
+    color_and_print(hints_board) # adds color to the item before printing
+    hints_board = [] # resets the array
+  end
+
+  def color_and_print(codes)
+    puts(codes.map { |code| code.to_s.colorize(code) }.join(" "))
   end
 end
