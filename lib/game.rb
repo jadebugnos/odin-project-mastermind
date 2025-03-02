@@ -1,13 +1,13 @@
 require_relative "color"
 # this file handles the Game class definition
 class Game
-  attr_reader :colors, :computer_code
+  attr_reader :colors, :computer_secret_code
 
   def initialize(player, colors)
     @player = player
     @colors = colors
     @computer_secret_code = @colors.generate_color_code
-    @hint = []
+    @hints_history = []
   end
 
   def start_game
@@ -60,22 +60,31 @@ class Game
   end
 
   # compares secret code to the guess code then outputs the hints
-  def guess_correct?(guesses, computer_code)
-    arr = Array.new(4, "____")
-    p computer_code
-    computer_code.each.with_index do |code, i|
+  def guess_correct?(guesses, secret_code)
+    hints_board = Array.new(4, "____")
+    code_counts = secret_code.tally # counts the occurrences of the codes
+    p secret_code
+    secret_code.each.with_index do |code, i|
+      if code == guesses[i]
+        hints_board[i] = :black
+        code_counts[code] -= 1 if code_counts[code].positive?
+      end
+    end
+
+    secret_code.each.with_index do |code, i|
       guesses.each.with_index do |guess, j|
-        unless %i[black white].include?(arr[j]) # makes sure doesn't overwrite previous assignment
-          if code == guess && i == j
-            arr[j] = :black
-          elsif code == guess && j != i
-            arr[j] = :white
-          end
+        # Check if:
+        # - The current position in `hints_board` is NOT already marked as `:black`
+        # - The guessed color (`guess`) exists in the secret code (`code`) but is in the wrong position (`j != i`)
+        # - There are still remaining occurrences of `guess` that haven't been marked (`code_counts[guess].positive?`)
+        if !%i[black].include?(hints_board[j]) && (code == guess && j != i) && code_counts[guess].positive?
+          hints_board[j] = :white
+          code_counts[guess] -= 1
         end
       end
     end
-    @hint.push(arr)
-    puts(arr.map { |item| item.to_s.colorize(item) }.join(" ")) # adds color to the item before printing
-    arr = []
+    @hints_history.push(hints_board)
+    puts(hints_board.map { |item| item.to_s.colorize(item) }.join(" ")) # adds color to the item before printing
+    hints_board.clear # resets the array
   end
 end

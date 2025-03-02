@@ -10,7 +10,11 @@ class Color
   def generate_color_code
     # makes sure it doesn't include the placeholder before taking 4 items for the secret code
     filtered_colors = @colors.reject { |item| item == :placeholder }
-    filtered_colors.sample(4)
+    secret_code = []
+    4.times do
+      secret_code.push(filtered_colors.sample)
+    end
+    secret_code
   end
 
   # handles color printing logic
