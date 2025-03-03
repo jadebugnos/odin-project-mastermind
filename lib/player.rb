@@ -2,7 +2,8 @@
 class Player
   attr_accessor :username, :roles
 
-  def initialize(username = nil, role = nil)
+  def initialize(colors, username = nil, role = nil)
+    @colors = colors
     @username = username
     @roles = role
   end
@@ -13,6 +14,7 @@ class Player
     slow_print "Hello #{@username}!"
     @roles = validate_role
     slow_print "You are the #{@roles}"
+    @roles
   end
 
   # handles player input validation for username
@@ -40,6 +42,27 @@ class Player
       puts e.message
     end
     role == 1 ? "Code Breaker" : "Code Maker"
+  end
+
+    # handles the players guess code input
+    def guess_code
+      guesses = []
+      until guesses.size == 4
+        guess = gets.chomp.to_i
+        color = @colors.colors[guess]
+        if (1..10).include?(guess)
+          guesses.push(color)
+          # Convert each symbol to a string, colorize it, and join with spaces
+          @colors.color_and_print(guesses)
+        else
+          puts "Invalid input! please select a valid number 1..10"
+        end
+      end
+      guesses
+    end
+
+  def choose_secret_code
+    guess_code
   end
 
   # add a slow printing animation to texts for better visual

@@ -7,16 +7,6 @@ class Color
     @colors = %i[placeholder red blue green yellow light_red magenta light_blue light_green light_yellow cyan]
   end
 
-  def generate_color_code
-    # makes sure it doesn't include the placeholder before taking 4 items for the secret code
-    filtered_colors = @colors.reject { |item| item == :placeholder }
-    secret_code = []
-    4.times do
-      secret_code.push(filtered_colors.sample)
-    end
-    secret_code
-  end
-
   # handles color printing logic
   def display_colors
     @colors.each_with_index do |item, index|
@@ -26,5 +16,9 @@ class Color
         print "#{index}. #{item} ".colorize(item)
       end
     end
+  end
+
+  def color_and_print(codes)
+    puts(codes.map { |code| code.to_s.colorize(code) }.join(" "))
   end
 end
