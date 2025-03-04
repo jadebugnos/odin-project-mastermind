@@ -5,9 +5,9 @@ class Computer
     @colors = %i[placeholder red blue green yellow light_red magenta light_blue light_green light_yellow cyan]
   end
 
-  # def computer_guess(hint)
-  #   if hint
-  # end
+  def computer_guess(_hint = nil)
+    generate_secret_code
+  end
 
   def generate_secret_code
     # makes sure it doesn't include the placeholder before taking 4 items for the secret code

@@ -44,24 +44,25 @@ class Player
     role == 1 ? "Code Breaker" : "Code Maker"
   end
 
-    # handles the players guess code input
-    def guess_code
-      guesses = []
-      until guesses.size == 4
-        guess = gets.chomp.to_i
-        color = @colors.colors[guess]
-        if (1..10).include?(guess)
-          guesses.push(color)
-          # Convert each symbol to a string, colorize it, and join with spaces
-          @colors.color_and_print(guesses)
-        else
-          puts "Invalid input! please select a valid number 1..10"
-        end
+  # handles the players guess code input
+  def guess_code
+    guesses = []
+    until guesses.size == 4
+      guess = gets.chomp.to_i
+      color = @colors.colors[guess]
+      if (1..10).include?(guess)
+        guesses.push(color)
+        # Convert each symbol to a string, colorize it, and join with spaces
+        @colors.color_and_print(guesses)
+      else
+        puts "Invalid input! please select a valid number 1..10"
       end
-      guesses
     end
+    guesses
+  end
 
   def choose_secret_code
+    @colors.display_colors
     guess_code
   end
 

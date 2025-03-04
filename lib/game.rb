@@ -13,38 +13,51 @@ class Game
   end
 
   def start_game
+    puts "start game is running...."
     role = @player.handle_input
-    run_game(role)
+    puts "Role received: #{role.inspect}"
+    player_secret_code = @player.choose_secret_code
+    # secret_code = role == "Code Breaker" ? @computer_secret_code : @player.choose_secret_code
+    secret_code = if role == "Code Breaker"
+                    @computer_secret_code
+                  elsif role == "Code Maker"
+                    player_secret_code
+                  end
+    puts "secret_code received: #{secret_code.inspect}"
+    run_game(role, secret_code)
   end
 
   # this method keeps looping the game for 10 rounds
-  def run_game(role)
+  def run_game(role, secret_code)
+    puts "run_game method is running"
     display_game_instructions(role)
     counter = 10
-    loop_game(counter, role)
+    loop_game(counter, role, secret_code)
   end
 
   def display_game_instructions(role)
-    if role == "Code Breaker"
-      @player.slow_print(GAME_INSTRUCTIONS[:code_breaker])
-    else
-      @player.slow_print(GAME_INSTRUCTIONS[:code_maker])
-    end
+    p "Role received: #{role.inspect}"
+    instructions = role == "Code Breaker" ? :code_breaker : :code_maker
+    @player.slow_print(GAME_INSTRUCTIONS[instructions])
   end
 
-  def loop_game(counter, role)
-    while counter
+  def loop_game(counter, role, secret_code)
+    while counter.positive?
       puts "#{counter} tries left"
       @colors.display_colors
-      guess = @player.guess_code
-      guess_correct?(guess, @computer_secret_code)
+      guess = role == "Code Breaker" ? @player.guess_code : @computer.computer_guess(@hints_history.last)
+      guess_correct?(guess, secret_code)
       if @hints_history.last.all? { |item| item == :black }
-        puts "The Secret Code has been decoded! Congratulations"
-        role == "Code Breaker" ? @colors.color_and_print(computer_secret_code) : @colors.color_and_print()
+        declare_result(secret_code, role)
         break
       end
       counter -= 1
     end
+  end
+
+  def declare_result(secret_code, _role)
+    puts "The Secret Code has been decoded! Congratulations"
+    @colors.color_and_print(secret_code)
   end
 
   # compares secret code to the guess code then outputs the hints
