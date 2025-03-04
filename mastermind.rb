@@ -7,6 +7,6 @@ require "pry-byebug"
 
 colors = Color.new
 player = Player.new(colors)
-computer = Computer.new
+computer = Computer.new(player, colors)
 new_game = Game.new(player, colors, computer)
 new_game.start_game

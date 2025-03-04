@@ -27,5 +27,6 @@ GAME_INSTRUCTIONS = {
 
     1. Black: Correct color and placement
     2. White: Correct color, wrong placement
+    3. Blank: No correct colors or placements.
   TEXT
 }.freeze

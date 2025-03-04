@@ -76,20 +76,20 @@ class Player
     puts
   end
 
-  def give_hints
+  def player_feedback
     hints = []
-    pegs = %i[placeholder black white]
+    pegs = %i[placeholder black white blank]
     slow_print(GAME_INSTRUCTIONS[:pegs_instructions])
     until hints.size == 4
       hint = gets.chomp.to_i
-      if (1..2).include?(hint)
+      if (1..3).include?(hint)
         hints.push(pegs[hint])
         # Convert each symbol to a string, colorize it, and join with spaces
         @colors.color_and_print(hints)
       else
-        puts "Invalid input! please select a valid number 1..10"
+        puts "Invalid input! please select a valid number 1..3"
       end
     end
-    hints
+    hints.map { |item| item == :blank ? "____" : item }
   end
 end
