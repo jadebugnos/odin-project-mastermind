@@ -16,21 +16,15 @@ class Game
     puts "start game is running...."
     role = @player.handle_input
     puts "Role received: #{role.inspect}"
-    player_secret_code = @player.choose_secret_code
-    # secret_code = role == "Code Breaker" ? @computer_secret_code : @player.choose_secret_code
-    secret_code = if role == "Code Breaker"
-                    @computer_secret_code
-                  elsif role == "Code Maker"
-                    player_secret_code
-                  end
-    puts "secret_code received: #{secret_code.inspect}"
-    run_game(role, secret_code)
+    run_game(role)
   end
 
   # this method keeps looping the game for 10 rounds
-  def run_game(role, secret_code)
-    puts "run_game method is running"
+  def run_game(role)
+    # binding.pry
+    puts "run_game method is running..."
     display_game_instructions(role)
+    secret_code = role == "Code Breaker" ? @computer_secret_code : @player.choose_secret_code
     counter = 10
     loop_game(counter, role, secret_code)
   end
