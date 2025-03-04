@@ -1,3 +1,4 @@
+require_relative "instructions"
 # this file handles the player class definition
 class Player
   attr_accessor :username, :roles
@@ -73,5 +74,22 @@ class Player
       sleep(0.05)
     end
     puts
+  end
+
+  def give_hints
+    hints = []
+    pegs = %i[placeholder black white]
+    slow_print(GAME_INSTRUCTIONS[:pegs_instructions])
+    until hints.size == 4
+      hint = gets.chomp.to_i
+      if (1..2).include?(hint)
+        hints.push(pegs[hint])
+        # Convert each symbol to a string, colorize it, and join with spaces
+        @colors.color_and_print(hints)
+      else
+        puts "Invalid input! please select a valid number 1..10"
+      end
+    end
+    hints
   end
 end

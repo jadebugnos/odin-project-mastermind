@@ -13,7 +13,6 @@ class Game
   end
 
   def start_game
-    puts "start game is running...."
     role = @player.handle_input
     puts "Role received: #{role.inspect}"
     run_game(role)
@@ -21,8 +20,6 @@ class Game
 
   # this method keeps looping the game for 10 rounds
   def run_game(role)
-    # binding.pry
-    puts "run_game method is running..."
     display_game_instructions(role)
     secret_code = role == "Code Breaker" ? @computer_secret_code : @player.choose_secret_code
     counter = 10
@@ -30,7 +27,6 @@ class Game
   end
 
   def display_game_instructions(role)
-    p "Role received: #{role.inspect}"
     instructions = role == "Code Breaker" ? :code_breaker : :code_maker
     @player.slow_print(GAME_INSTRUCTIONS[instructions])
   end
@@ -39,7 +35,7 @@ class Game
     while counter.positive?
       puts "#{counter} tries left"
       @colors.display_colors
-      guess = role == "Code Breaker" ? @player.guess_code : @computer.computer_guess(@hints_history.last)
+      guess = role == "Code Breaker" ? @player.guess_code : @computer.computer_guess(@player.give_hints)
       guess_correct?(guess, secret_code)
       if @hints_history.last.all? { |item| item == :black }
         declare_result(secret_code, role)
@@ -59,13 +55,22 @@ class Game
     hints_board = Array.new(4, "____")
     # this is a hash containing the number of occurrences of each code
     code_counts = secret_code.tally
+    add_black_pegs(guesses, secret_code, hints_board, code_counts)
+    add_white_pegs(guesses, secret_code, hints_board, code_counts)
+    @hints_history.push(hints_board)
+    @colors.color_and_print(hints_board)
+  end
+
+  def add_black_pegs(guesses, secret_code, hints_board, code_counts)
     secret_code.each.with_index do |code, i|
       if code == guesses[i]
         hints_board[i] = :black
         code_counts[code] -= 1 if code_counts[code].positive?
       end
     end
+  end
 
+  def add_white_pegs(guesses, secret_code, hints_board, code_counts)
     secret_code.each.with_index do |code, i|
       guesses.each.with_index do |guess, j|
         # Check if:
@@ -78,8 +83,5 @@ class Game
         end
       end
     end
-    @hints_history.push(hints_board)
-    @colors.color_and_print(hints_board)
-    hints_board = []
   end
 end

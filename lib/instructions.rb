@@ -10,7 +10,7 @@ GAME_INSTRUCTIONS = {
     Choose 4 colors and type their corresponding numbers:
   TEXT
 
-  code_maker: <<~TEXT
+  code_maker: <<~TEXT,
     You are the code maker! Choose a secret code of 4 colors.
     The computer will try to guess your code within 10 tries.
 
@@ -20,5 +20,12 @@ GAME_INSTRUCTIONS = {
     Blank: No correct colors or placements.
 
     Enter your secret code by typing the corresponding numbers:
+  TEXT
+
+  pegs_instructions: <<~TEXT
+    Provide feedback to the computer by selecting a peg:
+
+    1. Black: Correct color and placement
+    2. White: Correct color, wrong placement
   TEXT
 }.freeze
