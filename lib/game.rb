@@ -22,7 +22,7 @@ class Game
   def run_game(role)
     display_game_instructions(role)
     secret_code = role == "Code Breaker" ? @computer_secret_code : @player.choose_secret_code
-    counter = 10
+    counter = 12
     loop_game(counter, role, secret_code)
   end
 
@@ -35,8 +35,13 @@ class Game
     while counter.positive?
       puts "#{counter} tries left"
       @colors.display_colors
-      guess = role == "Code Breaker" ? @player.guess_code : @computer.computer_guess(secret_code)
-      @hints_history << (role == "Code Breaker" ? computer_feedback(guess, secret_code) : @player.player_feedback)
+      guess = role == "Code Breaker" ? @player.guess_code : @computer.computer_guess(@hints_history.last, secret_code)
+      @hints_history << (if role == "Code Breaker"
+                           @computer.computer_feedback(guess,
+                                                       secret_code)
+                         else
+                           @player.player_feedback
+                         end)
       @colors.color_and_print(@hints_history.last)
       if @hints_history.last.all? { |item| item == :black }
         declare_result(secret_code, role)
@@ -49,40 +54,5 @@ class Game
   def declare_result(secret_code, _role)
     puts "The Secret Code has been decoded! Congratulations"
     @colors.color_and_print(secret_code)
-  end
-
-  # compares secret code to the guess code then outputs the hints
-  def computer_feedback(guesses, secret_code)
-    hints_board = Array.new(4, "____")
-    # this is a hash containing the number of occurrences of each code
-    code_counts = secret_code.tally
-    add_black_pegs(guesses, secret_code, hints_board, code_counts)
-    add_white_pegs(guesses, secret_code, hints_board, code_counts)
-    @hints_history.push(hints_board)
-    hints_board
-  end
-
-  def add_black_pegs(guesses, secret_code, hints_board, code_counts)
-    secret_code.each.with_index do |code, i|
-      if code == guesses[i]
-        hints_board[i] = :black
-        code_counts[code] -= 1 if code_counts[code].positive?
-      end
-    end
-  end
-
-  def add_white_pegs(guesses, secret_code, hints_board, code_counts)
-    secret_code.each.with_index do |code, i|
-      guesses.each.with_index do |guess, j|
-        # Check if:
-        # - The current position in `hints_board` is NOT already marked as `:black`
-        # - The guessed color (`guess`) exists in the secret code (`code`) but is in the wrong position (`j != i`)
-        # - There are still remaining occurrences of `guess` that haven't been marked (`code_counts[guess].positive?`)
-        if !%i[black white].include?(hints_board[j]) && (code == guess && j != i) && code_counts[guess].positive?
-          hints_board[j] = :white
-          code_counts[guess] -= 1
-        end
-      end
-    end
   end
 end
