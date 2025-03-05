@@ -17,10 +17,17 @@ class Computer
       puts "Your Secret Code:"
       @colors.color_and_print(player_secret_code)
     end
-    @guess_history.empty? ? arr : intelligent_guess(hint, @guess_history.last, filtered_colors)
+    if hint.nil?
+      @guess_history << arr
+      arr
+    else
+      intelligent_guess(hint, @guess_history.last, filtered_colors)
+    end
   end
 
   def intelligent_guess(hints, last_guess, colors)
+    puts "intelligent_guess has been called..."
+    binding.pry
     marked_black = Array.new(4, nil)
     marked_white = Array.new(4, nil)
 
@@ -31,7 +38,6 @@ class Computer
         marked_white[i] = last_guess[i]
       end
     end
-
     return marked_black if marked_black.all?
 
     shuffled = marked_white.compact.shuffle
